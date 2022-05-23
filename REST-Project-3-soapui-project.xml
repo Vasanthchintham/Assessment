@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project id="d25e23d1-b3dd-4996-8b57-67c6ced04c12" activeEnvironment="Default" name="REST Project 3" soapui-version="5.7.0" abortOnError="false" runType="SEQUENTIAL" resourceRoot="" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:RestService" id="63cb2e75-bf4e-4cb1-9f9e-c1bbac8d929d" wadlVersion="http://wadl.dev.java.net/2009/02" name="https://restcountries.com" type="rest" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart=""/><con:endpoints><con:endpoint>https://restcountries.com</con:endpoint></con:endpoints><con:resource name="Lkr" path="/v3.1/currency/lkr" id="078f424e-d24b-49aa-b9fc-11ea14fdb20e"><con:settings/><con:parameters><con:parameter><con:name>cur</con:name><con:value/><con:style>QUERY</con:style><con:default/><con:description xsi:nil="true"/></con:parameter></con:parameters><con:method name="Lkr 1" id="68623bc9-c65b-4414-b9a4-6421190d6b6b" method="GET"><con:settings/><con:parameters/><con:representation type="RESPONSE"><con:mediaType>application/json</con:mediaType><con:status>200</con:status><con:params/><con:element>Response</con:element></con:representation><con:request name="Request 1" id="1e727a8a-c115-4e19-848a-1cd61249ec2f" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>https://restcountries.com</con:endpoint><con:request/><con:originalUri>https://restcountries.com/v3.1/currency/lkr</con:originalUri><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><entry key="cur" value="lkr" xmlns="http://eviware.com/soapui/config"/></con:parameters><con:parameterOrder><con:entry>cur</con:entry></con:parameterOrder></con:request></con:method></con:resource></con:interface><con:testSuite id="138892c3-46e5-421f-bf4c-ad768083664c" name="TestSuite 1"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase id="b18d1da8-9b48-41e4-9d3d-230d7accf375" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="getResponse" searchProperties="true"><con:settings/><con:testStep type="restrequest" name="getR" id="652646c8-aa10-45a4-9d49-40f2f707af90"><con:settings/><con:config service="https://restcountries.com" resourcePath="/v3.1/currency/lkr" methodName="Lkr 1" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:restRequest name="getR" id="1e727a8a-c115-4e19-848a-1cd61249ec2f" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>https://restcountries.com</con:endpoint><con:request/><con:originalUri>https://restcountries.com/v3.1/currency/lkr</con:originalUri><con:assertion type="Simple Contains" id="f9aff3ba-b830-4e39-b2bc-dae7e25898a1" name="Contains"><con:configuration><token>Sri Lanka</token><ignoreCase>false</ignoreCase><useRegEx>false</useRegEx></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><entry key="cur" value="" xmlns="http://eviware.com/soapui/config"/></con:parameters><con:parameterOrder><con:entry>cur</con:entry></con:parameterOrder></con:restRequest></con:config></con:testStep><con:testStep type="groovy" name="Groovy Script" id="684e85ae-13de-4715-af63-2455d4b1eef4"><con:settings/><con:config><script>import groovy.json.JsonSlurper
+//excel code to fetch currency code from excel
+import jxl.*
+import jxl.write.*
+Workbook work = Workbook.getWorkbook(new File ("C:\\Book1.xls"));
+Sheet sh =work.getSheet(0)
+
+Cell var = sh.getCell(0,0);
+
+testRunner.testCase.testSuite.project.setPropertyValue("currency",var.getContents())
+
+work.close();
+def tCase = testRunner.testCase.testSuite.testCases["getResponse"]
+def ctest = tCase.testSteps["getR"]
+ctest.run(testRunner,context)
+def addDetails = ctest.testRequest.response.responseContent
+def jsonSlurper = new JsonSlurper()
+def object = jsonSlurper.parseText(addDetails)
+log.info(object.capital[0][0])
+if(object.capital ==("Colombo")){
+log.info"Pass"
+}
+else{
+log.info"API-Fail"
+}</script></con:config></con:testStep><con:properties/></con:testCase><con:properties/></con:testSuite><con:properties><con:property><con:name>currency</con:name><con:value>lkr</con:value></con:property></con:properties><con:wssContainer/><con:oAuth2ProfileContainer/><con:oAuth1ProfileContainer/><con:sensitiveInformation/></con:soapui-project>
